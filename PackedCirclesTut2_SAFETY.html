@@ -1,0 +1,64 @@
+<doctype html>
+<html>
+<!-- https://www.youtube.com/watch?v=Z0PpaI0UlkE -->
+
+<head>
+    <title>D3 Packed Circles 2</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
+    <script src="underscore-min.js"></script>
+    <script src="pop_drift_lab_TUT_2.js"></script>
+</head>
+
+<body>
+
+    <script>
+
+        var pop = {};
+
+        pop = run();
+
+        console.log("pop: " + pop);
+        console.log("pop stringify: " + JSON.stringify(pop));
+
+        var width = 800,
+            height = 800;
+
+        var canvas = d3.select("body").append("svg")
+            .attr("width", width)
+            .attr("height", height)
+            .append("g");
+                //.attr("transform", "translate(50, 50)");
+
+        var pack = d3.layout.pack()
+            .size([width, height - 50])
+            .padding(10);
+
+
+        var nodes = pack.nodes(pop);
+        console.log(nodes);
+
+        var node = canvas.selectAll(".node")
+            .data(nodes)
+            .enter()
+            .append("g")
+                .attr("class", "node")
+                .attr("transform", function(d) {
+                    console.log("d.x: " + d.x + ", d.y: " + d.y);
+                    return "translate(" + d.x + ", " + d.y + ")";
+                });
+
+        node.append("circle")
+            .attr("r", function(d) { return d.r; })
+            .attr("fill", "steelblue")
+            .attr("opacity", 0.25)
+            .attr("stroke", "#ADADAD")
+            .attr("strokewidth", "2");
+
+    </script>
+
+</body>
+</html>
+
+
+
+

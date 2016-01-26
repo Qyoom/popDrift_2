@@ -3,13 +3,44 @@
 <!-- https://www.youtube.com/watch?v=Z0PpaI0UlkE -->
 
 <head>
-    <title>D3 Packed Circles tut</title>
+    <title>D3 Packed Circles 1</title>
     <script src="http://d3js.org/d3.v3.min.js"></script>
 </head>
 
 <body>
 
     <script>
+
+        function getData() {
+            var data = {
+                "name": "Max",
+                "value": "100",
+                "children": [
+                    {
+                        "name": "Sylvia",
+                        "value": 75,
+                        "children": [
+                            {"name": "Craig", "value": 25},
+                            {"name": "Robin", "value": 25},
+                            {"name": "Anne", "value": 25}
+                        ]
+                    },
+                    {   "name": "David",
+                        "value": 75,
+                        "children": [
+                            {"name": "Jeff", "value": 25},
+                            {"name": "Buffy", "value": 25}
+                        ]
+                    },
+                    {
+                        "name": "Mr. X",
+                        "value": 75
+                    }
+                ]
+            };
+
+            return data;
+        }
 
         var width = 800,
             height = 600;
@@ -25,10 +56,11 @@
             .padding(10);
 
         d3.json("myData.json", function(data) {
-            console.log(data);
+            console.log("data: " + data);
+            console.log("data stringify: " + JSON.stringify(data));
 
             var nodes = pack.nodes(data);
-            console.log(nodes);
+            console.log("nodes: " + nodes);
 
             var node = canvas.selectAll(".node")
                 .data(nodes)
