@@ -13,12 +13,12 @@
 
     <script>
 
-        function newGreen() {
-            return {"color": "green", "value": 25};
+        function newBlue() {
+            return {"color": "#9999ff", "value": 25};
         }
 
         function newOrange() {
-            return {"color": "orange", "value": 25};
+            return {"color": "#ff9933", "value": 25};
         }
 
         function run() {
@@ -30,7 +30,7 @@
             }; // end data
 
             for(var i = 0; i < 500; i++) {
-                data.children.push(newGreen());
+                data.children.push(newBlue());
                 data.children.push(newOrange());
             }
 
@@ -46,7 +46,7 @@
         pop = run();
 
         console.log("TUT3 pop: " + pop);
-        console.log("pop stringify: " + JSON.stringify(pop));
+        //console.log("pop stringify: " + JSON.stringify(pop));
 
         var width = 500,
             height = 500;
@@ -62,7 +62,7 @@
             .padding(10);
 
         var nodes = pack.nodes(pop);
-        console.log(nodes);
+        //console.log(nodes);
 
         var node = canvas.selectAll(".node")
             .data(nodes)
@@ -70,7 +70,7 @@
             .append("g")
                 .attr("class", "node")
                 .attr("transform", function(d) {
-                    console.log("d.x: " + d.x + ", d.y: " + d.y);
+                    //console.log("d.x: " + d.x + ", d.y: " + d.y);
                     return "translate(" + d.x + ", " + d.y + ")";
                 });
 
