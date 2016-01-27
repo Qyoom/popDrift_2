@@ -3,7 +3,7 @@
 <!-- https://www.youtube.com/watch?v=Z0PpaI0UlkE -->
 
 <head>
-    <title>D3 Packed Circles 7</title>
+    <title>D3 Packed Circles 8</title>
     <script src="d3.min.js"></script>
     <script src="underscore-min.js"></script>
 </head>
@@ -110,7 +110,7 @@
             });
 
         // Selected transition
-        selected.transition().duration(500).delay(500)
+        selected.transition().duration(1000).delay(500)
             .attr("stroke-width", 4);
 
         sampleIndex.unshift(0);
@@ -121,28 +121,59 @@
         notSelected.transition().attr("fill", "#e6e6e6").duration(2000).delay(500);
 
         // selected transition to normal
-        selected.transition().duration(2500).delay(1500)
+        selected.transition().duration(2000).delay(1500)
             .attr("stroke-width", 0);
             //.attr("stroke", "#e6e6e6");
 
         <!-- -------------------------- -->
 
         var blueSelected = selected.filter(function(d) {
-            console.log("d.color: " + d.color);
             return d.color === blueColor;
         });
         var blueSelectedCount = blueSelected.size();
 
-        console.log("blueSelectedCount: " + blueSelectedCount);
-        var blueRatio = blueSelectedCount / sampleSize;
-        var orangeRatio = 1 - blueRatio;
+        var blueSelectedRatio = d3.round(blueSelectedCount / sampleSize, 2);
+        var orangeSelectedRatio = d3.round(1 - blueSelectedRatio, 2);
 
-        console.log("blueRatio: " + blueRatio);
-        console.log("orangeRatio: " + orangeRatio);
+        console.log("blueSelectedRatio: " + blueSelectedRatio);
+        console.log("blueSelectedRatio * 10: " + blueSelectedRatio * 10);
+        console.log("blueSelectedRatio * 100: " + blueSelectedRatio * 100);
+        console.log("orangeSelectedRatio: " + orangeSelectedRatio);
+
+        var blueReplicantsCount = blueSelectedRatio * (maxPopulation - sampleSize);
+        var orangeReplicantsCount = orangeSelectedRatio * (maxPopulation - sampleSize);
+
+        console.log("blueReplicantsCount: " + blueReplicantsCount);
+        console.log("orangeReplicantsCount: " + orangeReplicantsCount);
+
+        var replicantIndexes = [] // length = maxPopulation - sampleSize
+        for(i = 0; i < maxPopulation - sampleSize; i++) { replicantIndexes[i] = i; }
+        d3.shuffle(replicantIndexes);
+        console.log("replicantIndexes: " + replicantIndexes);
+
+        notSelected.transition().attr("fill", function(d, i) { // length = maxPopulation - sampleSize
+            var color = orangeColor
+            if(replicantIndexes[i] < blueReplicantsCount) { color = blueColor; }
+            return color;
+        })
+        .duration(1000).delay(function(d, i) {
+            var delay = 2000;
+            if(i % 2 === 0) delay = 2500;
+            else if(i % 3 === 0) delay = 3000;
+            return delay;
+        });
+
+        var bluePop = marble.filter(function(d) {
+            return d.color === blueColor;
+        });
+        var bluePopCount = bluePop.size();
+
+        var bluePopRatio = d3.round(bluePopCount / maxPopulation, 2);
+        var orangePopRatio = d3.round(1 - bluePopRatio, 2);
 
         // TODO:
         // 1. Get the color ratio of selected.
-        // 2. Apply this color ratio to notSelected at with random positioning (indexing)
+        // 2. Apply this color ratio to notSelected at random positions (indexing)
         // 3. Repeat, i.e. do new sample, etc.
         // 4. Stop when the ratio is 1/0 or 0/1.
         // This is just all transitions, no enter, update, or detete!
