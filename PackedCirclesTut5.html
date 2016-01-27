@@ -3,7 +3,7 @@
 <!-- https://www.youtube.com/watch?v=Z0PpaI0UlkE -->
 
 <head>
-    <title>D3 Packed Circles 4</title>
+    <title>D3 Packed Circles 5</title>
     <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="underscore-min.js"></script>
     <!-- script src="pop_drift_lab_TUT_3.js"></script -->
@@ -65,7 +65,7 @@
 
         pop = run();
 
-        console.log("TUT4 pop: " + pop);
+        console.log("TUT5 pop: " + pop);
         //console.log("pop stringify: " + JSON.stringify(pop));
 
         var width = 500,
@@ -99,15 +99,15 @@
             .attr("fill", function(d) { return d.color; });
         console.log("marble length: " + marble.length);
 
-        // var odds = marble.filter(function(d, i) { return i % 2 === 1; });
-        // console.log("odds length: " + odds.length)
-        // odds.attr("stroke", "black").attr("stroke-width", 2);
+        <!-- -------------------------- -->
 
         var sampleIndex = randomIntArray(200, 1, 1000);
-        var sample = marble.filter(function(d, i) { 
-            return _.contains(sampleIndex, i); 
+        sampleIndex.unshift(0);
+        var notSelected = marble.filter(function(d, i) { 
+            return !_.contains(sampleIndex, i); 
         }); // TODO: use [fromIndex]
-        sample.attr("stroke", "black").attr("stroke-width", 1);
+        //notSelected.attr("stroke", "black").attr("stroke-width", 1);
+        notSelected.transition().attr("fill", "#e6e6e6").duration(3000);
 
     </script>
 
