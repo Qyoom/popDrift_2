@@ -3,22 +3,23 @@
 <!-- https://www.youtube.com/watch?v=Z0PpaI0UlkE -->
 
 <head>
-    <title>D3 Packed Circles 5</title>
+    <title>D3 Packed Circles 7</title>
     <script src="d3.min.js"></script>
     <script src="underscore-min.js"></script>
-    <!-- script src="pop_drift_lab_TUT_3.js"></script -->
 </head>
 
 <body>
 
     <script>
+        var blueColor = "#3333ff";
+        var orangeColor = "#e67300";
 
         function newBlue() {
-            return {"color": "#9999ff", "value": 25};
+            return {"color": blueColor, "value": 25};
         }
 
         function newOrange() {
-            return {"color": "#ff9933", "value": 25};
+            return {"color": orangeColor, "value": 25};
         }
 
         function run() {
@@ -65,9 +66,6 @@
 
         pop = run();
 
-        console.log("TUT5 pop: " + pop);
-        //console.log("pop stringify: " + JSON.stringify(pop));
-
         var width = 500,
             height = 500;
 
@@ -82,7 +80,6 @@
             .padding(10);
 
         var nodes = pack.nodes(pop);
-        //console.log(nodes);
 
         var node = canvas.selectAll(".node")
             .data(nodes)
@@ -90,7 +87,6 @@
             .append("g")
                 .attr("class", "node")
                 .attr("transform", function(d) {
-                    //console.log("d.x: " + d.x + ", d.y: " + d.y);
                     return "translate(" + d.x + ", " + d.y + ")";
                 });
 
@@ -99,29 +95,59 @@
             .attr("fill", function(d) { return d.color; })
             .attr("stroke-width", 0)
             .attr("stroke", "#e6e6e6");
-        console.log("marble length: " + marble.length);
 
         <!-- -------------------------- -->
 
-        var sampleIndex = randomIntArray(200, 1, 1000);
+        var sampleSize = 200;
+        var maxPopulation = 1000;
+
+        var sampleIndex = randomIntArray(sampleSize, 1, maxPopulation);
         var selected = marble.filter(function(d, i) { 
             return _.contains(sampleIndex, i); 
-        }); // TODO: use [fromIndex]
+        }) // TODO: use [fromIndex]
+        .attr("stroke", function(d) {
+                return d.color;
+            });
 
+        // Selected transition
         selected.transition().duration(1000).delay(500)
-            .attr("stroke-width", 1)
-            .attr("stroke", "#black");
+            .attr("stroke-width", 4);
 
         sampleIndex.unshift(0);
         var notSelected = marble.filter(function(d, i) { 
             return !_.contains(sampleIndex, i); 
         }); // TODO: use [fromIndex]
-        //notSelected.attr("stroke", "black").attr("stroke-width", 1);
-        notSelected.transition().attr("fill", "#e6e6e6").duration(2500).delay(1000);
+        // notSelected fade out
+        notSelected.transition().attr("fill", "#e6e6e6").duration(2000).delay(500);
 
-        selected.transition().duration(1000).delay(1500)
-            .attr("stroke-width", 0)
-            .attr("stroke", "#e6e6e6");
+        // selected transition to normal
+        selected.transition().duration(2000).delay(1500)
+            .attr("stroke-width", 0);
+            //.attr("stroke", "#e6e6e6");
+
+        <!-- -------------------------- -->
+
+        var blueSelected = selected.filter(function(d) {
+            console.log("d.color: " + d.color);
+            return d.color === blueColor;
+        });
+        var blueSelectedCount = blueSelected.size();
+
+        console.log("blueSelectedCount: " + blueSelectedCount);
+        var blueRatio = blueSelectedCount / sampleSize;
+        var orangeRatio = 1 - blueRatio;
+
+        console.log("blueRatio: " + blueRatio);
+        console.log("orangeRatio: " + orangeRatio);
+
+        // TODO:
+        // 1. Get the color ratio of selected.
+        // 2. Apply this color ratio to notSelected at with random positioning (indexing)
+        // 3. Repeat, i.e. do new sample, etc.
+        // 4. Stop when the ratio is 1/0 or 0/1.
+        // This is just all transitions, no enter, update, or detete!
+        // But that's not necessarily good! I feel I should be pure and actually replicate and replace!
+        // But that will take more study to master joins. But it is what I need and should do!
 
     </script>
 

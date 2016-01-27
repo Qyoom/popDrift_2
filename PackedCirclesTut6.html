@@ -3,8 +3,8 @@
 <!-- https://www.youtube.com/watch?v=Z0PpaI0UlkE -->
 
 <head>
-    <title>D3 Packed Circles 5</title>
-    <script src="d3.min.js"></script>
+    <title>D3 Packed Circles 6</title>
+    <script src="http://d3js.org/d3.v3.min.js"></script>
     <script src="underscore-min.js"></script>
     <!-- script src="pop_drift_lab_TUT_3.js"></script -->
 </head>
@@ -14,11 +14,11 @@
     <script>
 
         function newBlue() {
-            return {"color": "#9999ff", "value": 25};
+            return {"color": "#3333ff", "value": 25};
         }
 
         function newOrange() {
-            return {"color": "#ff9933", "value": 25};
+            return {"color": "#e67300", "value": 25};
         }
 
         function run() {
@@ -109,8 +109,10 @@
         }); // TODO: use [fromIndex]
 
         selected.transition().duration(1000).delay(500)
-            .attr("stroke-width", 1)
-            .attr("stroke", "#black");
+            .attr("stroke-width", 4)
+            .attr("stroke", function(d) {
+                return d.color;
+            });
 
         sampleIndex.unshift(0);
         var notSelected = marble.filter(function(d, i) { 
@@ -122,6 +124,17 @@
         selected.transition().duration(1000).delay(1500)
             .attr("stroke-width", 0)
             .attr("stroke", "#e6e6e6");
+
+        <!-- -------------------------- -->
+
+        // TODO:
+        // 1. Get the color ratio of selected.
+        // 2. Apply this color ratio to notSelected at with random positioning (indexing)
+        // 3. Repeat, i.e. do new sample, etc.
+        // 4. Stop when the ratio is 1/0 or 0/1.
+        // This is just all transitions, no enter, update, or detete!
+        // But that's not necessarily good! I feel I should be pure and actually replicate and replace!
+        // But that will take more study to master joins. But it is what I need and should do!
 
     </script>
 
