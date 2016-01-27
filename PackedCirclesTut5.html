@@ -96,18 +96,28 @@
 
         var marble = node.append("circle")
             .attr("r", function(d) { return d.r; })
-            .attr("fill", function(d) { return d.color; });
+            .attr("fill", function(d) { return d.color; })
+            .attr("stroke-width", 0)
+            .attr("stroke", "#e6e6e6");
         console.log("marble length: " + marble.length);
 
         <!-- -------------------------- -->
 
         var sampleIndex = randomIntArray(200, 1, 1000);
+        var selected = marble.filter(function(d, i) { 
+            return _.contains(sampleIndex, i); 
+        }); // TODO: use [fromIndex]
+
+        selected.transition().duration(1000).delay(500)
+            .attr("stroke-width", 1)
+            .attr("stroke", "black");
+
         sampleIndex.unshift(0);
         var notSelected = marble.filter(function(d, i) { 
             return !_.contains(sampleIndex, i); 
         }); // TODO: use [fromIndex]
         //notSelected.attr("stroke", "black").attr("stroke-width", 1);
-        notSelected.transition().attr("fill", "#e6e6e6").duration(3000);
+        notSelected.transition().attr("fill", "#e6e6e6").duration(3000).delay(1000);
 
     </script>
 
