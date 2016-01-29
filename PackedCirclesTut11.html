@@ -15,12 +15,14 @@
         var orangeColor = "#e67300";
         var sampleSize = 200;
         var maxPopulation = 1000;
+        var halfPop = d3.round(maxPopulation / 2, 0);
+        var sp = .25; // speed factor
 
-        var data = {
-            "value": "100",
-            "color": "#e6e6e6",
-            "children": []
-        }; // end data
+        // var data = {
+        //     "value": "100",
+        //     "color": "#e6e6e6",
+        //     "children": []
+        // }; // end data
 
         function newBlue() {
             return {"color": blueColor, "value": 25};
@@ -30,10 +32,17 @@
             return {"color": orangeColor, "value": 25};
         }
 
-        function run() {
+        function initPopulation(numBlue, numOrange) {
+            var data = {
+                "value": "100",
+                "color": "#e6e6e6",
+                "children": []
+            };
 
-            for(var i = 0; i < 500; i++) {
+            for(var i = 0; i < numBlue; i++) {
                 data.children.push(newBlue());
+            }
+            for(var i = 0; i < numOrange; i++) {
                 data.children.push(newOrange());
             }
 
@@ -66,7 +75,7 @@
 
         var pop = {};
 
-        pop = run();
+        pop = initPopulation(halfPop, halfPop);
 
         var width = 500,
             height = 500;
@@ -86,9 +95,13 @@
             //console.log("===>>>nodes: " + nodes);
             //alert("========>> UPDATE!");
 
+            // update all subsequen data
             var node = canvas.selectAll(".node")
                 .data(nodes);
 
+            node.exit().remove();
+
+            // enter first data
             node.enter()
                 .append("g")
                     .attr("class", "node")
@@ -113,7 +126,7 @@
             });
 
             // Selected transition
-            selected.transition().duration(1000).delay(500)
+            selected.transition().duration(1000 * sp).delay(500 * sp)
                 .attr("stroke-width", 4);
 
             sampleIndex.unshift(0);
@@ -125,12 +138,12 @@
                 .attr("fill", "#e6e6e6")
                 .attr("stroke", "#e6e6e6")
                 .attr("stroke-width", 0)
-                .duration(2000).delay(500);
+                .duration(2000 * sp).delay(750 * sp);
 
             // selected transition to normal
-            selected.transition().duration(2000).delay(1500)
-                .attr("stroke-width", 0);
-                //.attr("stroke", "#e6e6e6");
+            selected.transition().duration(2000 * sp).delay(1500 * sp)
+                .attr("stroke-width", 0)
+                .attr("stroke", "#e6e6e6");
 
             <!-- -------------------------- -->
 
@@ -157,7 +170,13 @@
             console.log("blueReplicantsCount: " + blueReplicantsCount);
             console.log("orangeReplicantsCount: " + orangeReplicantsCount);
 
-            
+            var newPop = initPopulation(blueReplicantsCount, orangeReplicantsCount);
+
+            if(blueSelectedRatio !== 1 && orangeSelectedRatio !== 1) {
+                setTimeout(function() {
+                    update(newPop);
+                }, 6000 * sp);
+            }
         } // end update
 
         update(pop);
